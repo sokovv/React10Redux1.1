@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import { SET_USER_NAME, SET_USER_PRICE } from "../redux/actions";
+import { SET_USER_NAME, SET_USER_PRICE, CHANGE_FILTER } from "../redux/actions";
 import change from "../redux/change";
 import update from "../redux/update";
 import ListItem from "./ListItem";
 
 export const MainApp = () => {
   const dispatch = useDispatch();
-  const { setName, price, listService, edit, editId } = useSelector(
+  const { setName, price, listService, edit, editId, filter } = useSelector(
     (state) => state.reducer
   );
 
@@ -24,6 +24,18 @@ export const MainApp = () => {
     <>
       <form onSubmit={submitHandler}>
         <div className="form-add">
+          Фильтр
+          <input
+            name="filter"
+            value={filter}
+            onChange={(e) => {
+              dispatch({
+                type: CHANGE_FILTER,
+                payload: e.target.value,
+              });
+            }}
+          />
+          Название
           <input
             type="text"
             required
@@ -35,6 +47,7 @@ export const MainApp = () => {
               });
             }}
           />
+          Стоимость
           <input
             type="number"
             required
@@ -46,7 +59,6 @@ export const MainApp = () => {
               });
             }}
           />
-
           <div>
             <button>Save</button>
             {edit && <button>Cancel</button>}
@@ -54,14 +66,18 @@ export const MainApp = () => {
         </div>
       </form>
       <ul className="list">
-        {listService.map((item) => (
-          <ListItem
-            key={item.id}
-            name={item.name}
-            price={item.price}
-            id={item.id}
-          />
-        ))}
+        {listService
+          .filter((item) =>
+            item.name.toLowerCase().includes(filter.toLowerCase())
+          )
+          .map((item) => (
+            <ListItem
+              key={item.id}
+              name={item.name}
+              price={item.price}
+              id={item.id}
+            />
+          ))}
       </ul>
     </>
   );

@@ -5,10 +5,12 @@ import {
   REMOVE,
   EDIT,
   UPDATE,
+  CHANGE_FILTER,
 } from "./actions";
 import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
+  filter: "",
   editId: "",
   setName: "",
   edit: false,
@@ -18,6 +20,11 @@ const initialState = {
 
 const Reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_FILTER:
+      return {
+        ...state,
+        filter: action.payload,
+      };
     case CHANGE:
       return {
         ...state,
